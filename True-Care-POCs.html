@@ -1,0 +1,950 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>True Care — Portfólio de POCs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  /* True Care — azul assistencial + azul-claro (arco da marca) */
+  --navy-950:#0b2f57; --navy-900:#123f6e; --navy-800:#1a5290; --navy-700:#2266ad;
+  --navy-600:#2f74c0; --blue-500:#4a9fdc; --blue-400:#66b2e6; --blue-300:#a9d5f2;
+  --green:#2bb37e; --green-600:#1f9668; --green-200:#bfe9d6;
+  --warn:#f5a524; --danger:#ef4d57; --ok:#1a9e6a;
+  --bg:#eef4fb; --card:#ffffff; --ink:#0e2138; --muted:#5c6f86; --line:#e1e9f2;
+  --ring:rgba(74,159,220,.42);
+  --shadow:0 10px 30px -12px rgba(11,47,87,.30);
+  --shadow-sm:0 4px 14px -8px rgba(11,47,87,.26);
+  --grad:linear-gradient(120deg,#2266ad,#66b2e6);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Inter',system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--ink);
+  background:
+    radial-gradient(900px 500px at 100% -5%,rgba(102,178,230,.14),transparent 60%),
+    radial-gradient(800px 600px at -10% 110%,rgba(43,179,126,.12),transparent 55%),
+    var(--bg);
+  min-height:100vh;
+}
+a{color:inherit;text-decoration:none}
+.app{display:flex;min-height:100vh}
+h1,h2,h3,h4,.val,.brand b{font-family:'Manrope','Inter',sans-serif}
+
+/* Sidebar */
+.side{width:288px;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto;
+  background:linear-gradient(170deg,var(--navy-950),var(--navy-800) 60%,var(--navy-700));
+  color:#cfe2f4;border-right:1px solid rgba(255,255,255,.06);}
+.side::-webkit-scrollbar{width:7px}.side::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:8px}
+.brand{padding:24px 22px 12px}
+.logo{display:block}
+.logo svg{width:100%;max-width:200px;height:auto;display:block}
+.brandsub{padding:8px 22px 14px;color:#8fb6dc;font-size:11px;line-height:1.4;border-bottom:1px solid rgba(255,255,255,.10)}
+.navgroup{padding:8px 16px 2px}
+.navgroup h4{margin:14px 0 8px;padding:0 10px;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#7ba6d1;font-weight:700}
+.nav a{display:flex;gap:11px;align-items:center;padding:10px 12px;border-radius:11px;font-size:13.5px;
+  color:#b6d2ea;cursor:pointer;transition:.18s ease;position:relative;font-weight:500;}
+.nav a .ico{width:22px;text-align:center;font-size:15px}
+.nav a:hover{background:rgba(255,255,255,.07);color:#fff;transform:translateX(2px)}
+.nav a.active{background:linear-gradient(90deg,rgba(102,178,230,.26),rgba(43,179,126,.10));
+  color:#fff;font-weight:700;box-shadow:inset 0 0 0 1px rgba(102,178,230,.36);}
+.nav a.active::before{content:"";position:absolute;left:-16px;top:8px;bottom:8px;width:4px;border-radius:0 4px 4px 0;background:var(--blue-400)}
+.side .foot{padding:18px 22px 26px;color:#7ba6d1;font-size:11px;line-height:1.5}
+
+/* Main */
+.main{flex:1;min-width:0}
+.topbar{backdrop-filter:saturate(160%) blur(10px);background:rgba(255,255,255,.8);border-bottom:1px solid var(--line);
+  padding:15px 34px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:30;}
+.topbar .crumb{font-size:11.5px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;font-weight:600}
+.topbar h2{margin:3px 0 0;font-size:20px;letter-spacing:-.3px}
+.pill{font-size:11px;padding:6px 13px;border-radius:999px;font-weight:700}
+.tag-poc{background:linear-gradient(135deg,rgba(102,178,230,.20),rgba(34,102,173,.10));color:#1a5290;box-shadow:inset 0 0 0 1px rgba(102,178,230,.40)}
+.content{padding:30px 34px 70px;max-width:1220px;animation:fade .4s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.lead{color:var(--muted);font-size:14.5px;max-width:840px;line-height:1.6;margin:0 0 24px}
+.lead b{color:var(--navy-700)}
+.dashtag{display:inline-block;font-size:11px;font-weight:700;color:#1a5290;background:rgba(102,178,230,.18);padding:4px 11px;border-radius:999px;margin-bottom:10px;letter-spacing:.04em}
+
+/* grid / cards */
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:980px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow-sm);transition:transform .2s,box-shadow .2s;}
+.card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.card h3{margin:0 0 4px;font-size:14.5px;letter-spacing:-.2px}
+.card .sub{color:var(--muted);font-size:12px;margin-bottom:14px}
+.kpi{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 20px;box-shadow:var(--shadow-sm);transition:.2s;}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.kpi .lab{font-size:12px;color:var(--muted);font-weight:500}
+.kpi .val{font-size:28px;font-weight:800;letter-spacing:-1px;margin-top:4px;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.kpi .delta{font-size:12px;font-weight:700;margin-top:5px}
+.up{color:var(--ok)}.down{color:var(--danger)}.flat{color:var(--muted)}
+.bar-top{height:4px;border-radius:6px;margin:-20px -20px 16px;background:var(--grad)}
+canvas{max-width:100%}
+.chartbox{height:262px;position:relative}.chartbox.sm{height:202px}.chartbox.lg{height:300px}
+
+/* table */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line)}
+th{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+tbody tr{transition:.15s}tbody tr:hover{background:#f2f8fd}
+.badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;display:inline-block}
+.b-ok{background:#e4f6ec;color:#0f7a45}.b-warn{background:#fdf0db;color:#b9770a}.b-bad{background:#fdeaec;color:#cf2436}.b-info{background:#e5f0fb;color:#1a5290}
+
+/* innovative components */
+.gauge{position:relative;width:180px;height:180px;margin:0 auto}
+.gauge .lbl{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gauge .lbl b{font-family:'Manrope';font-size:32px;line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.gauge .lbl span{font-size:11px;color:var(--muted);margin-top:4px}
+.rings{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:780px){.rings{grid-template-columns:repeat(2,1fr)}}
+.ring{text-align:center}
+.ring .circ{width:118px;height:118px;border-radius:50%;margin:0 auto;display:grid;place-items:center;position:relative}
+.ring .circ::before{content:"";position:absolute;inset:11px;border-radius:50%;background:var(--card)}
+.ring .circ b{position:relative;font-family:'Manrope';font-size:22px}
+.ring .nm{font-size:12px;color:var(--muted);margin-top:10px;font-weight:600}
+.ring .dl{font-size:11px;font-weight:700;margin-top:2px}
+.minirings{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.heat{display:grid;gap:6px;font-size:12px}
+.heat .hrow{display:grid;grid-template-columns:190px repeat(5,1fr);gap:6px;align-items:center}
+.heat .hh{font-size:10px;color:var(--muted);font-weight:700;text-align:center;text-transform:uppercase;letter-spacing:.02em}
+.heat .hl{font-size:12px;font-weight:600;color:var(--navy-700)}
+.cell{height:42px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;transition:transform .15s}
+.cell:hover{transform:scale(1.08);box-shadow:var(--shadow)}
+.c0{background:#e1e9f2;color:var(--muted)}
+.c1{background:#1a9e6a}.c2{background:#66b2e6;color:#0b2f57}.c3{background:#f5a524}.c4{background:#ef4d57}
+.heatleg{display:flex;gap:14px;margin-top:14px;font-size:11px;color:var(--muted);flex-wrap:wrap}
+.sw{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:5px;vertical-align:middle}
+.kanban{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+@media(max-width:980px){.kanban{grid-template-columns:1fr 1fr}}
+.kcol{background:#f1f6fc;border:1px solid var(--line);border-radius:14px;padding:12px;min-height:240px}
+.kcol .kh{display:flex;align-items:center;justify-content:space-between;font-size:11.5px;font-weight:700;margin-bottom:10px;color:var(--navy-700)}
+.kcol .kh .cnt{background:#fff;border:1px solid var(--line);border-radius:999px;padding:1px 9px;font-size:11px}
+.kdot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
+.kcard{background:#fff;border:1px solid var(--line);border-radius:11px;padding:11px;margin-bottom:9px;box-shadow:var(--shadow-sm);border-left:3px solid var(--blue-400)}
+.kcard.cr{border-left-color:var(--danger)}.kcard.wn{border-left-color:var(--warn)}.kcard.ok{border-left-color:var(--ok)}
+.kcard .kt{font-size:12px;font-weight:700}
+.kcard .km{font-size:10.5px;color:var(--muted);margin-top:3px}
+.kcard .kf{display:flex;align-items:center;justify-content:space-between;margin-top:8px;font-size:10px;color:var(--muted)}
+.av{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--navy-600));color:#fff;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:700}
+.funnel{display:flex;flex-direction:column;align-items:center;gap:7px;padding:6px 0}
+.fstage{color:#fff;border-radius:10px;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;font-weight:700;box-shadow:var(--shadow-sm);transition:transform .15s}
+.fstage:hover{transform:scale(1.02)}
+.fstage small{font-weight:500;opacity:.9;font-size:11px}
+.fstage b{font-family:'Manrope';font-size:16px}
+.dealcard{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid var(--line)}
+.dealcard .di{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,rgba(102,178,230,.16),rgba(34,102,173,.2));display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.dealcard .dn{font-size:13px;font-weight:600}.dealcard .ds{font-size:11px;color:var(--muted)}
+.dealcard .dv{margin-left:auto;font-family:'Manrope';font-weight:700;color:var(--navy-700);font-size:14px}
+.twin{position:relative;background:linear-gradient(160deg,#0b2f57,#2266ad);border-radius:16px;height:330px;overflow:hidden}
+.twin .grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:28px 28px}
+.hot{position:absolute;transform:translate(-50%,-50%);cursor:pointer}
+.hot .pin{width:18px;height:18px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 4px rgba(255,255,255,.12)}
+.hot .pin.cr{background:var(--danger);animation:pulse 1.6s infinite}
+.hot .pin.wn{background:var(--warn)}.hot .pin.ok{background:var(--ok)}.hot .pin.hq{background:var(--blue-400)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(239,77,87,.6)}70%{box-shadow:0 0 0 14px rgba(239,77,87,0)}100%{box-shadow:0 0 0 0 rgba(239,77,87,0)}}
+.hot .tip{position:absolute;left:24px;top:-8px;background:rgba(255,255,255,.96);border-radius:8px;padding:5px 9px;font-size:10.5px;white-space:nowrap;color:var(--navy-800);font-weight:600;box-shadow:var(--shadow)}
+.twin .lbl-eq{position:absolute;color:#bcd8f0;font-size:10px;font-weight:600}
+.twinleg{display:flex;gap:16px;margin-top:12px;font-size:11px;color:var(--muted);flex-wrap:wrap}
+.spark{display:flex;align-items:flex-end;gap:3px;height:36px}
+.spark i{flex:1;background:linear-gradient(180deg,var(--blue-400),var(--blue-300));border-radius:3px 3px 0 0;min-height:3px}
+.scoretab td{vertical-align:middle}
+.trend-up{color:var(--ok);font-weight:700}.trend-dn{color:var(--danger);font-weight:700}
+
+/* app showcases */
+.applay{display:grid;grid-template-columns:300px 1fr;gap:24px;align-items:start}
+@media(max-width:900px){.applay{grid-template-columns:1fr}}
+.maplbl{font-size:10px;fill:#bcd8f0;font-weight:600}
+.fmap{position:relative;height:330px;border-radius:14px;overflow:hidden;background:linear-gradient(160deg,#0b2f57,#2266ad)}
+.syncrow{display:flex;gap:10px;flex-wrap:wrap}
+.syncpill{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 14px;font-size:12px;font-weight:600;box-shadow:var(--shadow-sm)}
+.syncpill .d{width:9px;height:9px;border-radius:50%}
+.statrow{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}
+.statrow b{font-family:'Manrope';font-size:18px}
+.statrow .sd{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:8px}
+.tline{position:relative;margin:30px 14px 10px;height:60px}
+.tline .base{height:4px;background:var(--line);border-radius:4px;position:absolute;left:0;right:0;top:7px}
+.tline .fillb{height:4px;border-radius:4px;position:absolute;left:0;top:7px;background:linear-gradient(90deg,var(--danger),var(--warn),var(--ok))}
+.tnode{position:absolute;top:-1px;transform:translateX(-50%);text-align:center;width:88px}
+.tnode .pin{width:18px;height:18px;border-radius:50%;border:3px solid #fff;margin:0 auto;box-shadow:var(--shadow-sm)}
+.tnode .dd{font-size:11px;font-weight:700;margin-top:6px}
+.tnode .cap{font-size:9.5px;color:var(--muted);margin-top:1px;font-weight:600;line-height:1.15}
+.stepper{display:flex;align-items:flex-start;margin:10px 0 4px}
+.snode{flex:1;text-align:center;position:relative}
+.snode .cir{width:34px;height:34px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:13px;position:relative;z-index:2}
+.snode .cir.done{background:var(--ok)}.snode .cir.act{background:var(--navy-600);box-shadow:0 0 0 5px rgba(47,116,192,.18)}.snode .cir.pend{background:#c1d3e6}
+.snode .stx{font-size:10.5px;margin-top:8px;color:var(--navy-700);font-weight:700;line-height:1.2}
+.snode .ssub{font-size:10px;color:var(--muted);margin-top:1px}
+.snode::before{content:"";position:absolute;top:17px;left:-50%;width:100%;height:3px;background:var(--line);z-index:1}
+.snode:first-child::before{display:none}
+.snode.fdone::before{background:var(--ok)}
+.xpwrap{display:flex;align-items:center;gap:12px}
+.lvl{width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,var(--green),var(--navy-600));color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--shadow-sm)}
+.lvl b{font-family:'Manrope';font-size:17px;line-height:1}.lvl span{font-size:8px;letter-spacing:.08em}
+.xpbar{height:12px;border-radius:999px;background:#e1e9f2;overflow:hidden;margin:7px 0 4px}
+.xpbar i{display:block;height:100%;background:var(--grad)}
+.streak{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.streak i{width:21px;height:21px;border-radius:5px;background:#e1e9f2}
+.streak i.on{background:linear-gradient(135deg,var(--green),var(--green-600))}
+.streak i.today{outline:2px solid var(--navy-600);outline-offset:1px}
+.badgewall{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:4px}
+.bdg{text-align:center;background:#f1f6fc;border:1px solid var(--line);border-radius:12px;padding:11px 6px}
+.bdg .ic{font-size:22px}.bdg .bn{font-size:9.5px;color:var(--muted);margin-top:5px;font-weight:600;line-height:1.15}
+.bdg.lock{opacity:.4;filter:grayscale(1)}
+.leader .lr{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+.leader .rk{width:23px;height:23px;border-radius:50%;background:var(--navy-700);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.leader .rk.g{background:linear-gradient(135deg,#f5a524,#e08600)}
+.leader .lr.me{font-weight:700;color:var(--navy-700)}
+.leader .lr .pts{margin-left:auto;font-weight:700;color:var(--muted)}
+.detview{position:relative;border-radius:14px;overflow:hidden;background:linear-gradient(135deg,#0b2f57,#1a5290);height:300px}
+.detview .gridb{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:30px 30px}
+.bbox{position:absolute;border:2px solid;border-radius:6px}
+.bbox .bl{position:absolute;top:-19px;left:-2px;font-size:10px;font-weight:700;padding:1px 6px;border-radius:5px;color:#0b2f57;white-space:nowrap}
+.confrow{display:flex;align-items:center;gap:11px;margin-bottom:11px}
+.confrow .cn{font-size:12px;width:170px;font-weight:600}
+.confbar{flex:1;height:9px;border-radius:9px;background:#e1e9f2;overflow:hidden}
+.confbar i{display:block;height:100%;border-radius:9px}
+.confrow .cv{font-size:11px;font-weight:700;width:46px;text-align:right}
+.pipe{display:flex;align-items:center;flex-wrap:wrap}
+.pstep{flex:1;text-align:center;background:#f1f6fc;border:1px solid var(--line);border-radius:11px;padding:10px 6px;min-width:84px}
+.pstep .pi{font-size:17px}.pstep .pn{font-size:10px;font-weight:700;margin-top:3px;color:var(--navy-700)}
+.parr{color:var(--green-600);font-weight:800;padding:0 6px}
+
+/* personalization extras */
+.certrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.cert{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:#fff;background:rgba(102,178,230,.20);border:1px solid rgba(102,178,230,.42);padding:5px 12px;border-radius:999px}
+.livechip{display:inline-flex;align-items:center;font-size:11px;color:var(--muted);font-weight:600}
+.livedot{width:8px;height:8px;border-radius:50%;background:#1a9e6a;display:inline-block;margin-right:7px;box-shadow:0 0 0 0 rgba(26,158,106,.6);animation:lp 1.8s infinite}
+@keyframes lp{0%{box-shadow:0 0 0 0 rgba(26,158,106,.5)}70%{box-shadow:0 0 0 8px rgba(26,158,106,0)}100%{box-shadow:0 0 0 0 rgba(26,158,106,0)}}
+.clientwall{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+@media(max-width:780px){.clientwall{grid-template-columns:repeat(2,1fr)}}
+.cwall{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:#f1f6fc;border:1px solid var(--line);border-radius:12px;padding:14px 8px;font-family:'Manrope';font-weight:700;font-size:12px;color:var(--navy-700);text-align:center;transition:.2s}
+.cwall .ce{font-size:20px}
+.cwall:hover{transform:translateY(-2px);box-shadow:var(--shadow);color:var(--green-600)}
+.donutwrap{position:relative}
+.donutctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.donutctr b{font-family:'Manrope';font-size:23px;line-height:1}
+.donutctr span{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* phone mockups */
+.phones{display:flex;flex-wrap:wrap;gap:28px}
+.phone{width:300px;flex-shrink:0;border-radius:40px;padding:11px;background:linear-gradient(160deg,#0b2f57,#1a5290);
+  box-shadow:0 30px 60px -22px rgba(6,26,50,.6),inset 0 0 0 1px rgba(255,255,255,.06);position:relative;}
+.phone::before{content:"";position:absolute;top:18px;left:50%;transform:translateX(-50%);width:96px;height:22px;background:#06213f;border-radius:0 0 14px 14px;z-index:5}
+.phone .screen{background:#eef4fb;border-radius:30px;overflow:hidden;height:600px;display:flex;flex-direction:column}
+.ph-status{height:30px;background:linear-gradient(135deg,var(--navy-800),var(--navy-600));color:#fff;font-size:10px;display:flex;align-items:center;justify-content:space-between;padding:0 18px}
+.ph-head{background:linear-gradient(135deg,var(--navy-800),var(--navy-600));color:#fff;padding:8px 18px 16px;position:relative}
+.ph-head::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:16px;background:#eef4fb;border-radius:16px 16px 0 0}
+.ph-head .t{font-size:15px;font-weight:700;font-family:'Manrope'}
+.ph-head .s{font-size:11px;color:var(--green-200);margin-top:2px}
+.ph-body{flex:1;overflow-y:auto;padding:14px 14px 18px;background:#eef4fb}
+.ph-body::-webkit-scrollbar{width:0}
+.ph-nav{height:58px;background:#fff;border-top:1px solid var(--line);display:flex;box-shadow:0 -4px 14px -8px rgba(11,47,87,.18)}
+.ph-nav div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;color:var(--muted);gap:3px;font-weight:600}
+.ph-nav div.on{color:var(--navy-600)}
+.ph-nav .d{font-size:17px}
+.mini{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 13px;margin-bottom:11px;box-shadow:var(--shadow-sm)}
+.mini .mt{font-size:13px;font-weight:600}
+.mini .ms{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.chk{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+.box{width:19px;height:19px;border-radius:6px;border:2px solid var(--blue-300);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff}
+.box.c{background:var(--ok);border-color:var(--ok)}.box.x{background:var(--danger);border-color:var(--danger)}
+.btn{display:inline-block;background:linear-gradient(135deg,var(--navy-700),var(--navy-600));color:#fff;border-radius:11px;padding:10px 15px;font-size:12.5px;font-weight:700;text-align:center;box-shadow:0 8px 18px -10px rgba(47,116,192,.7)}
+.btn.full{display:block}
+.btn.acc{background:var(--grad);color:#fff;box-shadow:0 8px 18px -10px rgba(102,178,230,.8)}
+.progress{height:9px;border-radius:9px;background:#e1e9f2;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--grad);border-radius:9px}
+.note{font-size:12.5px;color:var(--muted);line-height:1.55}
+.callout{background:linear-gradient(135deg,rgba(102,178,230,.12),rgba(34,102,173,.08));border:1px solid var(--line);border-left:4px solid var(--blue-400);border-radius:12px;padding:12px 15px;font-size:13px;color:var(--navy-700);margin:6px 0 18px;line-height:1.5}
+.feat{display:flex;gap:11px;align-items:flex-start;font-size:13px;margin-bottom:11px;line-height:1.5}
+.feat .fi{width:30px;height:30px;border-radius:10px;background:linear-gradient(135deg,rgba(102,178,230,.18),rgba(34,102,173,.2));color:var(--navy-700);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
+
+/* power platform flow */
+.flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap}
+.step{background:linear-gradient(180deg,#fff,#f4f9fe);border:1px solid var(--line);border-radius:14px;padding:14px;min-width:148px;flex:1;text-align:center;box-shadow:var(--shadow-sm);transition:.2s}
+.step:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.step .si{font-size:22px}.step .sn{font-weight:700;font-size:13px;margin-top:5px;font-family:'Manrope'}.step .sd{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.35}
+.arrow{display:flex;align-items:center;justify-content:center;color:var(--green-600);font-size:20px;padding:0 8px;font-weight:800}
+@media(max-width:900px){.arrow{transform:rotate(90deg);padding:8px 0}}
+.archlegend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:16px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
+.disc{font-size:11px;color:var(--muted);font-style:italic;margin-top:18px}
+.stack>*+*{margin-top:18px}
+.hero{border-radius:20px;padding:26px 28px;margin-bottom:24px;color:#e7f0fa;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,var(--navy-900),var(--navy-700));box-shadow:var(--shadow);}
+.hero::after{content:"";position:absolute;right:-60px;top:-60px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(102,178,230,.42),transparent 65%)}
+.hero h1{color:#fff;margin:0 0 8px;font-size:24px;letter-spacing:-.4px}
+.hero p{margin:0;max-width:810px;color:#bcd8f0;font-size:14px;line-height:1.6}
+.hero .chips{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+.hero .chips span{font-size:12px;font-weight:600;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16)}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><div class="logo">
+      <svg viewBox="0 0 220 70" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 30 Q110 12 200 30" fill="none" stroke="#66b2e6" stroke-width="5" stroke-linecap="round"/>
+        <text x="16" y="56" font-family="Manrope,Arial" font-weight="800" font-size="32" fill="#ffffff" letter-spacing="-1">True Care</text>
+      </svg>
+    </div></div>
+    <div class="brandsub">Excelência em assistência domiciliar · Portfólio de Provas de Conceito</div>
+    <div class="navgroup"><h4>Aplicativos</h4><div class="nav" id="nav-app"></div></div>
+    <div class="navgroup"><h4>Dashboards (Power BI)</h4><div class="nav" id="nav-dash"></div></div>
+    <div class="navgroup"><h4>Power Platform</h4><div class="nav" id="nav-pp"></div></div>
+    <div class="foot">Power Tech · Power BI &amp; Power Platform · Microsoft 365<br>Dados ilustrativos para demonstração.</div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div><div class="crumb" id="crumb">Início</div><h2 id="title">Portfólio de POCs — True Care</h2></div>
+      <div style="display:flex;align-items:center;gap:14px"><span class="livechip"><span class="livedot"></span>dados em tempo real</span><span class="pill tag-poc" id="pocflag">15 provas de conceito</span></div>
+    </div>
+    <div class="content" id="view"></div>
+  </main>
+</div>
+
+<script>
+const MES=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const dp=['#123f6e','#1a5290','#2266ad','#2f74c0','#4a9fdc','#66b2e6','#2bb37e','#a9d5f2'];
+const charts=[];
+function destroyCharts(){while(charts.length){try{charts.pop().destroy()}catch(e){}}}
+function C(id,cfg){const el=document.getElementById(id);if(!el)return;const c=new Chart(el,cfg);charts.push(c);return c;}
+Chart.defaults.font.family="'Inter',system-ui,sans-serif";
+Chart.defaults.color="#5c6f86";
+Chart.defaults.plugins.legend.labels.boxWidth=12;
+Chart.defaults.plugins.legend.labels.usePointStyle=true;
+Chart.defaults.plugins.legend.labels.font={size:11};
+
+const APPS=[
+ {id:'app1',ico:'📍',name:'Cockpit & Mapa',crumb:'Aplicativos / Cockpit da Diretoria + Mapa de Pacientes'},
+ {id:'app2',ico:'💙',name:'Portal do Paciente',crumb:'Aplicativos / Portal do Paciente & Família'},
+ {id:'app3',ico:'🩺',name:'Equipe em Campo',crumb:'Aplicativos / Equipe Multidisciplinar em Campo'},
+ {id:'app4',ico:'🎓',name:'True Educa',crumb:'Aplicativos / True Educa'},
+ {id:'app5',ico:'🤖',name:'Análise de Feridas IA',crumb:'Aplicativos / Análise de Lesões com IA'}];
+const DASH=[
+ {id:'dash1',ico:'🔥',name:'Capacidade Assistencial',crumb:'Dashboards / Capacidade & Cobertura Assistencial'},
+ {id:'dash2',ico:'🏥',name:'Desospitalização',crumb:'Dashboards / Fluxo de Desospitalização (SLA)'},
+ {id:'dash3',ico:'🗺️',name:'Roteiro de Visitas',crumb:'Dashboards / Roteiro de Visitas & Equipes'},
+ {id:'dash4',ico:'💰',name:'Custo & Glosas',crumb:'Dashboards / Custo do Cuidado & Glosas'},
+ {id:'dash5',ico:'📈',name:'Executivo & Qualidade',crumb:'Dashboards / Executivo & Qualidade Assistencial'}];
+const PP=[
+ {id:'pp1',ico:'📱',name:'Prontuário de Visita',crumb:'Power Platform / Power Apps (Prontuário Domiciliar)'},
+ {id:'pp2',ico:'⚡',name:'Faturamento & TISS',crumb:'Power Platform / Power Automate (Faturamento)'},
+ {id:'pp3',ico:'🔔',name:'Alertas Clínicos',crumb:'Power Platform / Power Automate (Intercorrências)'},
+ {id:'pp4',ico:'📅',name:'Implantação Rápida',crumb:'Power Platform / Power Automate (SLA de implantação)'},
+ {id:'pp5',ico:'💬',name:'Copiloto Assistencial',crumb:'Power Platform / Copilot Studio'}];
+
+function buildNav(){
+  const m=(list,el)=>{document.getElementById(el).innerHTML=list.map(i=>`<a data-id="${i.id}"><span class="ico">${i.ico}</span>${i.name}</a>`).join('')};
+  m(APPS,'nav-app');m(DASH,'nav-dash');m(PP,'nav-pp');
+  document.querySelectorAll('.nav a').forEach(a=>a.onclick=()=>go(a.dataset.id));
+}
+function setActive(id){document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('active',a.dataset.id===id));}
+function meta(id){return [...APPS,...DASH,...PP].find(x=>x.id===id);}
+function kpi(lab,val,delta,cls){return `<div class="kpi"><div class="bar-top"></div><div class="lab">${lab}</div><div class="val">${val}</div><div class="delta ${cls}">${delta}</div></div>`;}
+function phone(title,sub,body,nav){
+  return `<div class="phone"><div class="screen">
+    <div class="ph-status"><span>09:41</span><span>📶 🔋 100%</span></div>
+    <div class="ph-head"><div class="t">${title}</div><div class="s">${sub}</div></div>
+    <div class="ph-body">${body}</div><div class="ph-nav">${nav}</div></div></div>`;
+}
+
+/* ================= APPS ================= */
+function app1(){
+ return `<span class="dashtag">GESTÃO · Cockpit da diretoria + mapa de pacientes</span>
+ <p class="lead">App da diretoria e da central 24h com os indicadores do home care no bolso — pacientes ativos, implantações, intercorrências e reinternação — e um <b>mapa dos atendimentos domiciliares</b> em São Paulo. Decisão em tempo real sobre equipes, rotas e casos de risco.</p>
+ <div class="applay">
+  ${phone('Cockpit True Care','Bom dia 👋 · central 24h',
+    `<div class="callout" style="margin:0 0 11px">⚠️ <b>2 intercorrências</b> ativas na Zona Leste — equipe de plantão acionada</div>
+     <div class="grid g2" style="grid-template-columns:1fr 1fr;gap:10px;margin-bottom:11px">
+       <div class="kpi" style="padding:12px"><div class="lab">Pacientes ativos</div><div class="val" style="font-size:21px">1.240</div></div>
+       <div class="kpi" style="padding:12px"><div class="lab">Visitas hoje</div><div class="val" style="font-size:21px">386</div></div>
+     </div>
+     <div class="mini"><div class="row"><div class="mt">Implantações pendentes (alta)</div><span class="badge b-warn">7</span></div><div class="ms">SLA de 2h · 1 fora do prazo</div></div>
+     <div class="mini"><div class="row"><div class="mt">Taxa de reinternação</div><span class="badge b-info">8,2%</span></div><div class="ms">meta &le; 10% · em queda</div></div>`,
+    `<div class="on"><span class="d">📊</span>Cockpit</div><div><span class="d">🗺️</span>Mapa</div><div><span class="d">🔔</span>Alertas</div><div><span class="d">👤</span>Perfil</div>`)}
+  <div class="stack">
+    <div class="card"><h3>Mapa de atendimentos · São Paulo</h3><div class="sub">pacientes e equipes — passe o mouse</div>
+      <div class="fmap">
+        <svg viewBox="0 0 480 330" width="100%" height="100%" preserveAspectRatio="none" style="position:absolute;inset:0">
+          <path d="M60 60 L420 60 L420 270 L60 270 Z" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.16)" stroke-width="2"/>
+          <path d="M240 60 L240 270 M60 165 L420 165" stroke="rgba(255,255,255,.10)" stroke-width="1.5"/>
+          <circle cx="150" cy="120" r="11" fill="#1a9e6a" stroke="#fff" stroke-width="3"/><text x="150" y="102" class="maplbl" text-anchor="middle">Zona Oeste · 214 pac.</text>
+          <circle cx="330" cy="115" r="12" fill="#ef4d57" stroke="#fff" stroke-width="3"/><text x="330" y="97" class="maplbl" text-anchor="middle">Zona Leste · intercorr.</text>
+          <circle cx="320" cy="215" r="9" fill="#f5a524" stroke="#fff" stroke-width="3"/><text x="320" y="235" class="maplbl" text-anchor="middle">Zona Sul · implantação</text>
+          <circle cx="150" cy="215" r="9" fill="#2f74c0" stroke="#fff" stroke-width="3"/><text x="150" y="235" class="maplbl" text-anchor="middle">Zona Norte · rota ativa</text>
+          <circle cx="240" cy="165" r="7" fill="#66b2e6" stroke="#fff" stroke-width="2"/><text x="240" y="153" class="maplbl" text-anchor="middle">Sede · Matarazzo</text>
+        </svg>
+      </div>
+      <div class="twinleg"><span><span class="sw c1"></span>Estável</span><span><span class="sw c3"></span>Implantação/atenção</span><span><span class="sw c4"></span>Intercorrência</span></div>
+    </div>
+    <div class="card"><h3>Atualização & alertas</h3><div class="sub">central 24h, prontuário e telemetria</div>
+      <div class="syncrow">
+        <div class="syncpill"><span class="d" style="background:var(--ok)"></span>Dados em tempo real</div>
+        <div class="syncpill"><span class="d" style="background:var(--danger)"></span>Intercorrência ativa</div>
+        <div class="syncpill"><span class="d" style="background:var(--blue-400)"></span>Push no Teams ativo</div>
+      </div>
+    </div>
+  </div>
+ </div>
+ <div class="grid g3" style="margin-top:18px">
+   <div class="card"><div class="feat"><div class="fi">🏠</div><div><b>Do hospital ao lar</b><br><span class="note">Desospitalização, atenção domiciliar e telemedicina numa visão só.</span></div></div></div>
+   <div class="card"><div class="feat"><div class="fi">⏱️</div><div><b>Central 24h em tempo real</b><br><span class="note">Implantação, visitas e intercorrências sem esperar o relatório.</span></div></div></div>
+   <div class="card"><div class="feat"><div class="fi">🔗</div><div><b>Microsoft 365</b><br><span class="note">Alertas no Teams; nada de planilha solta na operação.</span></div></div></div>
+ </div>`;
+}
+function app2(){
+ setTimeout(()=>{C('a2g',{type:'doughnut',data:{datasets:[{data:[96,4],backgroundColor:['#1a9e6a','#e1e9f2'],borderWidth:0,circumference:270,rotation:225}]},options:{cutout:'74%',plugins:{legend:{display:false},tooltip:{enabled:false}}}});},40);
+ return `<span class="dashtag">EXPERIÊNCIA · Portal do paciente & família</span>
+ <p class="lead">Área do paciente e do familiar (em Power Pages): <b>plano de cuidado, agenda de visitas, equipe responsável, evolução, telemedicina e Ouvidoria</b> em tempo real. Menos ligações para a central, mais tranquilidade para a família. Ao lado, o cockpit do cuidado e a linha do tempo do tratamento domiciliar.</p>
+ <div class="applay">
+  ${phone('Sr. Antônio, 78','Paciente · atenção domiciliar',
+    `<div class="grid g2" style="grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+       <div class="kpi" style="padding:12px"><div class="lab">Visitas na semana</div><div class="val" style="font-size:20px">6</div></div>
+       <div class="kpi" style="padding:12px"><div class="lab">Adesão ao plano</div><div class="val" style="font-size:20px;-webkit-text-fill-color:initial;background:none;color:var(--ok)">96%</div></div>
+     </div>
+     <div class="mini"><div class="row"><div class="mt">Próxima visita · Enf. Paula</div><span class="badge b-info">Hoje 14h</span></div><div class="ms">curativo + sinais vitais</div></div>
+     <div class="mini"><div class="row"><div class="mt">Teleconsulta · Dra. Marcia</div><span class="badge b-warn">Amanhã 10h</span></div><div class="ms">reavaliação clínica</div></div>
+     <div class="btn acc full">🎥 Entrar na telemedicina</div>`,
+    `<div class="on"><span class="d">🗓️</span>Agenda</div><div><span class="d">📈</span>Evolução</div><div><span class="d">👩‍⚕️</span>Equipe</div><div><span class="d">💬</span>Ouvidoria</div>`)}
+  <div class="stack">
+    <div class="card"><h3>Cockpit do cuidado</h3><div class="sub">Sr. Antônio · plano de atenção domiciliar</div>
+      <div style="display:flex;gap:22px;align-items:center;flex-wrap:wrap">
+        <div class="gauge"><canvas id="a2g"></canvas><div class="lbl"><b>96%</b><span>adesão</span></div></div>
+        <div style="flex:1;min-width:180px">
+          <div class="statrow"><span><span class="sd" style="background:var(--navy-600)"></span>Visitas/semana</span><b>6</b></div>
+          <div class="statrow"><span><span class="sd" style="background:var(--warn)"></span>Teleconsultas</span><b>2</b></div>
+          <div class="statrow"><span><span class="sd" style="background:var(--ok)"></span>Sinais estáveis</span><b>7 dias</b></div>
+          <div class="statrow" style="border:none"><span><span class="sd" style="background:var(--blue-400)"></span>Sem intercorrência</span><b>12 dias</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="card"><h3>Linha do tratamento</h3><div class="sub">da alta hospitalar à alta assistencial</div>
+      <div class="tline"><div class="base"></div><div class="fillb" style="width:62%"></div>
+        <div class="tnode" style="left:8%"><div class="pin" style="background:var(--ok)"></div><div class="dd">D-0</div><div class="cap">Alta hospitalar</div></div>
+        <div class="tnode" style="left:34%"><div class="pin" style="background:var(--ok)"></div><div class="dd">D-0</div><div class="cap">Implantação (1h48)</div></div>
+        <div class="tnode" style="left:62%"><div class="pin" style="background:var(--warn)"></div><div class="dd">Hoje</div><div class="cap">Em atenção<br>domiciliar</div></div>
+        <div class="tnode" style="left:88%"><div class="pin" style="background:var(--blue-400)"></div><div class="dd">D+30</div><div class="cap">Alta assist. (prev.)</div></div>
+      </div>
+    </div>
+  </div>
+ </div>
+ <div class="callout" style="margin-top:18px">💡 Agenda, evolução e telemedicina self-service reduzem o volume na central 24h, aproximam a família do cuidado e melhoram a adesão ao plano terapêutico.</div>`;
+}
+function app3(){
+ return `<span class="dashtag">EXPERIÊNCIA · Equipe multidisciplinar em campo</span>
+ <p class="lead">App do enfermeiro, técnico e cuidador: <b>roteiro de visitas, checklist de procedimentos, sinais vitais, evolução, registro de insumos e foto de ferida</b> — mesmo offline no domicílio. E a <b>jornada da visita</b> em etapas, do deslocamento à evolução. Tira a papelada da casa do paciente e alimenta o prontuário em tempo real.</p>
+ <div class="applay">
+  ${phone('Visita VS-3320','Enf. Paula · Zona Oeste',
+    `<div class="mini"><div class="row"><div class="mt">Sr. Antônio, 78 · atenção domiciliar</div><span class="badge b-info">A caminho</span></div><div class="ms">curativo + sinais vitais · janela 14:00 · 6 km</div></div>
+     <div class="mini"><div class="mt">Checklist da visita</div>
+       <div class="chk"><div class="box c">✓</div>Higienização / EPI</div>
+       <div class="chk"><div class="box c">✓</div>Sinais vitais (PA/FC/SpO2)</div>
+       <div class="chk"><div class="box x">✕</div>Ferida — evolução piorou</div>
+       <div class="chk"><div class="box">&nbsp;</div>Evolução & prescrição</div></div>
+     <div class="btn acc full">📷 Registrar foto da lesão</div>`,
+    `<div class="on"><span class="d">🗺️</span>Roteiro</div><div><span class="d">📋</span>Checklist</div><div><span class="d">📷</span>Lesão</div><div><span class="d">👤</span>Perfil</div>`)}
+  <div class="stack">
+    <div class="card"><h3>Jornada da visita · VS-3320</h3><div class="sub">do deslocamento à evolução</div>
+      <div class="stepper">
+        <div class="snode fdone"><div class="cir done">✓</div><div class="stx">Roteiro</div><div class="ssub">definido</div></div>
+        <div class="snode fdone"><div class="cir done">✓</div><div class="stx">Deslocam.</div><div class="ssub">6 km</div></div>
+        <div class="snode"><div class="cir act">3</div><div class="stx">Atendimento</div><div class="ssub">em casa</div></div>
+        <div class="snode"><div class="cir pend">4</div><div class="stx">Evolução</div><div class="ssub">prontuário</div></div>
+        <div class="snode"><div class="cir pend">5</div><div class="stx">Fechamento</div><div class="ssub">insumos</div></div>
+      </div>
+      <div class="progress" style="margin-top:16px"><i style="width:55%"></i></div>
+      <div class="note" style="margin-top:8px">55% concluído · chegada estimada dentro da janela do paciente.</div>
+    </div>
+    <div class="card"><h3>Casos que exigem atenção hoje</h3><div class="sub">central 24h · plantão</div>
+      <table><thead><tr><th>Paciente</th><th>Linha</th><th>Motivo</th><th>Status</th></tr></thead><tbody>
+        <tr><td>Sr. Antônio</td><td>Atenção domic.</td><td>Ferida piorou</td><td><span class="badge b-warn">Reavaliar</span></td></tr>
+        <tr><td>D. Marli</td><td>Internação domic.</td><td>SpO2 baixa</td><td><span class="badge b-bad">Intercorrência</span></td></tr>
+        <tr><td>Sr. Jorge</td><td>Reabilitação</td><td>Falta de visita</td><td><span class="badge b-warn">Reagendar</span></td></tr>
+        <tr><td>D. Cleusa</td><td>Atenção domic.</td><td>—</td><td><span class="badge b-ok">Estável</span></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+ </div>`;
+}
+function app4(){
+ const days=[1,1,1,1,1,0,1,1,1,1,1,1,1,2];
+ const streak=days.map(d=>`<i class="${d===1?'on':d===2?'on today':''}"></i>`).join('');
+ return `<span class="dashtag">EXPERIÊNCIA · True Educa · educação continuada gamificada</span>
+ <p class="lead">O <b>True Educa</b> — a plataforma de educação continuada da True Care — com mecânica de jogo para as equipes multidisciplinares, cuidadores e familiares: trilhas de <b>manejo de feridas, controle de infecção, ventilação e oxigenoterapia, segurança do paciente e cuidado ao cuidador</b>, com XP, sequência, conquistas e ranking. Padroniza a assistência, reforça a segurança e acelera a integração de novas equipes.</p>
+ <div class="applay">
+  ${phone('True Educa','Olá, Paula 👋 · 4 trilhas ativas',
+    `<div class="mini"><div class="row"><div class="mt">Manejo de Feridas & Curativos</div><span class="ms">80%</span></div><div class="progress" style="margin-top:7px"><i style="width:80%"></i></div></div>
+     <div class="mini"><div class="row"><div class="mt">Controle de Infecção</div><span class="ms">55%</span></div><div class="progress" style="margin-top:7px"><i style="width:55%"></i></div></div>
+     <div class="mini"><div class="row"><div class="mt">Segurança do Paciente</div><span class="ms">100%</span></div><div class="progress" style="margin-top:7px"><i style="width:100%;background:var(--ok)"></i></div></div>
+     <div class="callout" style="margin-top:4px">🔥 Sequência de 12 dias de estudo</div>`,
+    `<div class="on"><span class="d">🎓</span>Trilhas</div><div><span class="d">▶️</span>Aulas</div><div><span class="d">🏅</span>Certif.</div><div><span class="d">👤</span>Perfil</div>`)}
+  <div class="stack">
+    <div class="card"><h3>Seu progresso</h3><div class="sub">nível, XP e sequência de estudo</div>
+      <div class="xpwrap"><div class="lvl"><b>7</b><span>NÍVEL</span></div>
+        <div style="flex:1"><div class="row" style="font-size:12px;font-weight:600"><span>2.240 XP</span><span class="note">faltam 760 p/ nível 8</span></div>
+          <div class="xpbar"><i style="width:75%"></i></div></div>
+      </div>
+      <div style="font-size:12px;font-weight:600;margin-top:14px">🔥 Sequência atual — 12 dias</div>
+      <div class="streak">${streak}</div>
+    </div>
+    <div class="grid g2" style="gap:18px">
+      <div class="card"><h3>Conquistas</h3><div class="sub">8 de 12 desbloqueadas</div>
+        <div class="badgewall">
+          <div class="bdg"><div class="ic">🥇</div><div class="bn">1ª trilha</div></div>
+          <div class="bdg"><div class="ic">🔥</div><div class="bn">Sequência 7d</div></div>
+          <div class="bdg"><div class="ic">🩹</div><div class="bn">Feridas</div></div>
+          <div class="bdg"><div class="ic">🧼</div><div class="bn">Infecção</div></div>
+          <div class="bdg"><div class="ic">🫁</div><div class="bn">Oxigenoter.</div></div>
+          <div class="bdg"><div class="ic">🛡️</div><div class="bn">Segurança</div></div>
+          <div class="bdg lock"><div class="ic">💎</div><div class="bn">Nível 10</div></div>
+          <div class="bdg lock"><div class="ic">👑</div><div class="bn">Top 1</div></div>
+        </div>
+      </div>
+      <div class="card"><h3>Ranking da equipe</h3><div class="sub">Enfermagem · jun</div>
+        <div class="leader">
+          <div class="lr"><span class="rk g">1</span>Carla M.<span class="pts">2.880 XP</span></div>
+          <div class="lr"><span class="rk">2</span>João P.<span class="pts">2.520 XP</span></div>
+          <div class="lr me"><span class="rk">3</span>Você (Paula)<span class="pts">2.240 XP</span></div>
+          <div class="lr"><span class="rk">4</span>Bruno S.<span class="pts">2.040 XP</span></div>
+          <div class="lr"><span class="rk">5</span>Aline F.<span class="pts">1.820 XP</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+ </div>`;
+}
+function app5(){
+ return `<span class="dashtag">ASSISTENCIAL · Análise de feridas/lesões com IA</span>
+ <p class="lead">Na visita, a foto da lesão passa pela IA, que <b>classifica o estágio da lesão por pressão, estima área e compara com a evolução anterior</b> — apoiando a conduta da enfermagem e documentando a evolução com data e local. Padroniza a avaliação de feridas, antecipa a piora e reduz reinternação por agravamento.</p>
+ <div class="applay">
+  ${phone('Análise por IA','Sr. Antônio · lesão sacral',
+    `<div style="background:linear-gradient(135deg,#0b2f57,#1a5290);border-radius:14px;height:150px;position:relative;margin-bottom:12px;overflow:hidden">
+        <div style="position:absolute;top:34px;left:70px;width:70px;height:52px;border:2px solid #ef4d57;border-radius:50%"></div>
+        <div style="position:absolute;top:20px;left:66px;font-size:10px;color:#ffb3b0">estágio 3 · 0.90</div>
+        <div style="position:absolute;bottom:24px;right:40px;font-size:10px;color:#bfe9d6">área 6,2 cm²</div>
+        <div style="position:absolute;bottom:6px;left:10px;font-size:11px;color:#a9d5f2">lesao_sacral.jpg</div></div>
+     <div class="mini"><div class="row"><div class="mt">🔴 Lesão por pressão · estágio 3</div><span class="badge b-bad">90%</span></div><div class="ms">área estimada 6,2 cm² · +8% vs. semana</div></div>
+     <div class="mini"><div class="row"><div class="mt">🟠 Sinal de infecção</div><span class="badge b-warn">64%</span></div><div class="ms">recomenda reavaliação médica</div></div>`,
+    `<div class="on"><span class="d">🤖</span>Análise</div><div><span class="d">🗂️</span>Fila</div><div><span class="d">📈</span>Evolução</div><div><span class="d">👤</span>Perfil</div>`)}
+  <div class="stack">
+    <div class="card"><h3>Estúdio de análise de feridas</h3><div class="sub">Sr. Antônio · lesão sacral · IA Wound-Vision v3</div>
+      <div class="detview"><div class="gridb"></div>
+        <div class="bbox" style="left:30%;top:26%;width:34%;height:40%;border-color:#ef4d57"><span class="bl" style="background:#ef4d57;color:#fff">estágio 3 · 0.90</span></div>
+        <div class="bbox" style="left:36%;top:40%;width:18%;height:18%;border-color:#f5a524"><span class="bl" style="background:#f5a524">infecção · 0.64</span></div>
+        <div class="bbox" style="left:14%;top:66%;width:24%;height:18%;border-color:#1a9e6a"><span class="bl" style="background:#1a9e6a;color:#fff">pele íntegra · 0.95</span></div>
+      </div>
+      <div style="margin-top:14px">
+        <div class="confrow"><span class="cn">Estágio 3 (lesão pressão)</span><div class="confbar"><i style="width:90%;background:#ef4d57"></i></div><span class="cv">90%</span></div>
+        <div class="confrow"><span class="cn">Sinal de infecção</span><div class="confbar"><i style="width:64%;background:#f5a524"></i></div><span class="cv">64%</span></div>
+        <div class="confrow"><span class="cn">Piora vs. semana anterior</span><div class="confbar"><i style="width:58%;background:#f5a524"></i></div><span class="cv">+8%</span></div>
+      </div>
+    </div>
+    <div class="card"><h3>Pipeline de avaliação</h3><div class="sub">foto da visita · análise automática</div>
+      <div class="pipe">
+        <div class="pstep"><div class="pi">📷</div><div class="pn">Foto na visita</div></div><span class="parr">➜</span>
+        <div class="pstep"><div class="pi">🧹</div><div class="pn">Normaliza</div></div><span class="parr">➜</span>
+        <div class="pstep"><div class="pi">🧠</div><div class="pn">Modelo IA</div></div><span class="parr">➜</span>
+        <div class="pstep"><div class="pi">🏷️</div><div class="pn">Estágio + área</div></div><span class="parr">➜</span>
+        <div class="pstep"><div class="pi">🗂️</div><div class="pn">Fila enfermeiro</div></div>
+      </div>
+      <div class="callout" style="margin:14px 0 0">⚡ <b>3.120 fotos</b> avaliadas no mês · <b>96</b> lesões com piora sinalizadas — a enfermagem prioriza os casos de risco e evita reinternação por agravamento.</div>
+    </div>
+  </div>
+ </div>
+ <div class="disc">* Marcações de detecção e percentuais são ilustrativos para a demonstração do conceito — não substituem avaliação clínica.</div>`;
+}
+
+/* ================= DASH 1 — CAPACIDADE ASSISTENCIAL ================= */
+function dash1(){
+ const regioes=['Zona Oeste','Zona Leste','Zona Sul','Zona Norte','Centro','Grande ABC'];
+ const dias=['Seg','Ter','Qua','Qui','Sex'];
+ const data=[ [3,4,3,4,4],[3,4,4,4,3],[2,3,2,3,2],[2,2,3,2,2],[1,2,1,2,1],[2,3,2,2,3] ];
+ const cls=['c0','c1','c2','c3','c4'];
+ let rows=`<div class="hrow"><div></div>${dias.map(n=>`<div class="hh">${n}</div>`).join('')}</div>`;
+ regioes.forEach((p,i)=>{rows+=`<div class="hrow"><div class="hl">${p}</div>${data[i].map(v=>{const pct=['—','62','74','88','96'][v];return `<div class="cell ${cls[v]}">${pct}%</div>`;}).join('')}</div>`;});
+ const r3=(v,c,nm)=>`<div class="ring"><div class="circ" style="background:conic-gradient(${c} ${v*3.6}deg,#e1e9f2 0)"><b>${v}%</b></div><div class="nm">${nm}</div></div>`;
+ setTimeout(()=>{
+  C('d1g',{type:'doughnut',data:{datasets:[{data:[86,14],backgroundColor:['#f5a524','#e1e9f2'],borderWidth:0,circumference:270,rotation:225}]},options:{cutout:'74%',plugins:{legend:{display:false},tooltip:{enabled:false}}}});
+ },40);
+ return `<span class="dashtag">VISUALIZAÇÃO · Heatmap de capacidade assistencial</span>
+  <p class="lead">Carga das equipes por região <b>em tempo real</b>, com mapa de calor por área e dia, indicadores de cobertura e medidor global de ocupação. Antecipa a região que vai estourar a agenda — antes de virar visita atrasada ou hora extra.</p>
+  <div class="grid" style="grid-template-columns:300px 1fr;gap:18px">
+    <div class="stack">
+      <div class="card" style="text-align:center"><h3>Ocupação das equipes</h3><div class="sub">visitas alocadas / capacidade</div>
+        <div class="gauge"><canvas id="d1g"></canvas><div class="lbl"><b>86%</b><span>ideal &lt; 90%</span></div></div>
+      </div>
+      ${kpi('Visitas/dia','386','multidisciplinar','flat')}
+      ${kpi('Pacientes por equipe','14','▼ balanceando','up')}
+    </div>
+    <div class="card"><h3>Heatmap · região × dia</h3><div class="sub">ocupação (%) das equipes por área de SP</div>
+      <div class="heat">${rows}</div>
+      <div class="heatleg"><span><span class="sw c2"></span>&lt;70% folga</span><span><span class="sw c1"></span>70–85% ideal</span><span><span class="sw c3"></span>85–95% alta</span><span><span class="sw c4"></span>&gt;95% saturada</span></div>
+    </div>
+  </div>
+  <div class="grid g2" style="margin-top:18px">
+   <div class="card"><h3>Cobertura assistencial</h3><div class="sub">agenda × visita × registro</div>
+     <div class="minirings">${r3(94,'#2266ad','Visitas no prazo')}${r3(86,'#f5a524','Ocupação')}${r3(97,'#1a9e6a','Evolução OK')}</div>
+     <div class="note" style="margin-top:14px;text-align:center">94% das visitas acontecem <b style="color:var(--green-600)">dentro da janela</b> combinada com a família.</div>
+   </div>
+   <div class="card"><h3>Regiões em alerta</h3><div class="sub">foco da coordenação de campo</div>
+     <table><thead><tr><th>Região</th><th>Ocupação</th><th>Pac./equipe</th><th>Causa</th><th>Status</th></tr></thead><tbody>
+       <tr><td>Zona Leste</td><td>96%</td><td>17</td><td>Alta demanda + intercorrência</td><td><span class="badge b-bad">Saturada</span></td></tr>
+       <tr><td>Zona Oeste</td><td>88%</td><td>15</td><td>Novas implantações</td><td><span class="badge b-warn">Alta</span></td></tr>
+       <tr><td>Zona Sul</td><td>74%</td><td>13</td><td>—</td><td><span class="badge b-info">Operando</span></td></tr>
+       <tr><td>Centro</td><td>62%</td><td>11</td><td>—</td><td><span class="badge b-ok">Folga</span></td></tr>
+     </tbody></table>
+   </div>
+  </div>`;
+}
+
+/* ================= DASH 2 — DESOSPITALIZAÇÃO (SLA) ================= */
+function dash2(){
+ const stages=[['Alta hospitalar (captação)',420,'#a9d5f2'],['Elegibilidade / autorização',360,'#66b2e6'],['Alocação de equipe',320,'#4a9fdc'],['Implantação (≤2h)',300,'#2266ad'],['Em atendimento domiciliar',288,'#0b2f57']];
+ const max=420;
+ const fun=stages.map(s=>{const w=42+(s[1]/max)*58;return `<div class="fstage" style="width:${w}%;background:linear-gradient(135deg,${s[2]},${s[2]}cc)"><span><small>${s[0]}</small></span><b>${s[1]}</b></div>`;}).join('');
+ setTimeout(()=>{
+  C('d2c',{type:'bar',data:{labels:['Captação','Elegibilidade','Autorização operadora','Alocação equipe','Implantação (visita)'],datasets:[{label:'Tempo médio (min)',data:[25,40,55,20,48],backgroundColor:(c)=>{const x=c.chart.ctx,g=x.createLinearGradient(0,0,c.chart.width,0);g.addColorStop(0,'#2266ad');g.addColorStop(1,'#66b2e6');return g;},borderRadius:6,barThickness:18}]},options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{display:false}}}}});
+ },40);
+ return `<span class="dashtag">VISUALIZAÇÃO · Funil de desospitalização (SLA)</span>
+  <p class="lead">A desospitalização como um <b>funil</b> — da alta hospitalar à implantação em casa — com o tempo por etapa e o <b>SLA de implantação em até 2 horas</b>, o grande diferencial da True Care. Dá previsibilidade ao hospital/operadora e libera leito mais rápido.</p>
+  <div class="grid g4" style="margin-bottom:18px">
+   ${kpi('Altas captadas (mês)','420','hospitais parceiros','flat')}
+   ${kpi('Tempo médio de implantação','1h48','meta ≤ 2h','up')}
+   ${kpi('Dentro do SLA (2h)','92%','▲ 3 p.p.','up')}
+   ${kpi('Conversão alta→atend.','68,6%','▲ captação','up')}
+  </div>
+  <div class="grid" style="grid-template-columns:1.05fr 1fr;gap:18px">
+    <div class="card"><h3>Funil de desospitalização (mês)</h3><div class="sub">da alta hospitalar ao atendimento em casa</div>
+      <div class="funnel">${fun}</div>
+      <div class="note" style="margin-top:10px">Maior espera na <b>autorização da operadora</b> — foco de integração e SLA com convênios.</div>
+    </div>
+    <div class="card"><h3>Tempo por etapa</h3><div class="sub">minutos · gargalo em destaque</div><div class="chartbox"><canvas id="d2c"></canvas></div></div>
+  </div>
+  <div class="card" style="margin-top:18px"><h3>Implantações do dia (SLA 2h)</h3><div class="sub">foco da central 24h</div>
+    <table><thead><tr><th>Paciente</th><th>Hospital / origem</th><th>Etapa</th><th>Tempo</th><th>Status</th></tr></thead><tbody>
+      <tr><td>D. Marli</td><td>Hosp. São Luiz</td><td>Autorização operadora</td><td>2h20</td><td><span class="badge b-bad">Fora do SLA</span></td></tr>
+      <tr><td>Sr. Antônio</td><td>Hosp. Sírio</td><td>Implantação (visita)</td><td>1h48</td><td><span class="badge b-ok">No SLA</span></td></tr>
+      <tr><td>Sr. Jorge</td><td>Hosp. Albert Einstein</td><td>Alocação de equipe</td><td>0h55</td><td><span class="badge b-info">Em curso</span></td></tr>
+      <tr><td>D. Cleusa</td><td>Hosp. Samaritano</td><td>Captação</td><td>0h20</td><td><span class="badge b-ok">No prazo</span></td></tr>
+    </tbody></table>
+  </div>`;
+}
+
+/* ================= DASH 3 — ROTEIRO DE VISITAS ================= */
+function dash3(){
+ const card=(c,t,m,who,foot)=>`<div class="kcard ${c}"><div class="kt">${t}</div><div class="km">${m}</div><div class="kf"><span>${foot}</span><span class="av">${who}</span></div></div>`;
+ return `<span class="dashtag">VISUALIZAÇÃO · Kanban de roteiro & equipes</span>
+  <p class="lead">O roteiro de visitas domiciliares como um <b>quadro Kanban ao vivo</b>: cada visita percorre as colunas até a conclusão. A coordenação equilibra as equipes, protege a janela do paciente e reage na hora a intercorrências.</p>
+  <div class="grid g4" style="margin-bottom:18px">
+   ${kpi('Visitas hoje','386','multidisciplinar','flat')}
+   ${kpi('No prazo (janela)','94%','▲ 2 p.p.','up')}
+   ${kpi('Custo por visita','R$ 96','▼ de R$ 104','up')}
+   ${kpi('Ociosidade de rota','9%','▼ melhorando','up')}
+  </div>
+  <div class="card"><h3>Roteiro do dia · equipes</h3><div class="sub">arraste-e-solte (conceito) · 386 visitas</div>
+   <div class="kanban">
+     <div class="kcol"><div class="kh"><span><span class="kdot" style="background:#a9d5f2"></span>Agendada</span><span class="cnt">142</span></div>
+       ${card('','Sr. Antônio · curativo','Z. Oeste · 14:00','PA','janela')}
+       ${card('','D. Cleusa · sinais vitais','Z. Sul · 15:30','TC','—')}
+     </div>
+     <div class="kcol"><div class="kh"><span><span class="kdot" style="background:#66b2e6"></span>A caminho</span><span class="cnt">38</span></div>
+       ${card('wn','Sr. Jorge · fisioterapia','Z. Norte · 6 km','FT','no horário')}
+     </div>
+     <div class="kcol"><div class="kh"><span><span class="kdot" style="background:#2266ad"></span>Em atendimento</span><span class="cnt">54</span></div>
+       ${card('','D. Rosa · medicação','Centro','TC','em casa')}
+       ${card('','Sr. Paulo · O2','Z. Oeste','EF','em casa')}
+     </div>
+     <div class="kcol"><div class="kh"><span><span class="kdot" style="background:#ef4d57"></span>Intercorrência</span><span class="cnt">4</span></div>
+       ${card('cr','D. Marli · SpO2 baixa','Z. Leste','EF','plantão')}
+     </div>
+     <div class="kcol"><div class="kh"><span><span class="kdot" style="background:#1a9e6a"></span>Concluída</span><span class="cnt">148</span></div>
+       ${card('ok','Sr. Célio','evolução OK','PA','✓')}
+     </div>
+   </div>
+  </div>
+  <div class="card" style="margin-top:18px"><h3>Visitas em risco de atraso / intercorrência</h3><div class="sub">foco da coordenação e da central 24h</div>
+    <table><thead><tr><th>Paciente</th><th>Região</th><th>Janela</th><th>Causa</th><th>Status</th></tr></thead><tbody>
+      <tr><td>D. Marli</td><td>Zona Leste</td><td>agora</td><td>SpO2 baixa — intercorrência</td><td><span class="badge b-bad">Plantão acionado</span></td></tr>
+      <tr><td>Sr. Jorge</td><td>Zona Norte</td><td>13:30</td><td>Trânsito no deslocamento</td><td><span class="badge b-warn">Monitorar</span></td></tr>
+      <tr><td>Sr. Antônio</td><td>Zona Oeste</td><td>14:00</td><td>—</td><td><span class="badge b-ok">No prazo</span></td></tr>
+    </tbody></table>
+  </div>`;
+}
+
+/* ================= DASH 4 — CUSTO & GLOSAS ================= */
+function dash4(){
+ setTimeout(()=>{
+  C('d4w',{type:'bar',data:{labels:['Receita','Equipe assist.','Insumos / OPME','Logística/rota','Adm.','Margem'],datasets:[{
+    data:[[0,100],[52,100],[38,52],[30,38],[22,30],[0,22]],
+    backgroundColor:['#2266ad','#ef4d57','#f5a524','#f5a524','#f5a524','#1a9e6a'],borderRadius:4}]},
+    options:{plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'índice '+c.raw[0]+'→'+c.raw[1]}}},scales:{x:{grid:{display:false}},y:{title:{display:true,text:'índice (receita=100)'}}}}});
+  C('d4mix',{type:'doughnut',data:{labels:['Internação domiciliar','Atenção domiciliar','Telemedicina','Aluguel de equipamentos','Reabilitação/Fisio'],datasets:[{data:[38,30,12,12,8],backgroundColor:['#0b2f57','#2266ad','#4a9fdc','#66b2e6','#2bb37e'],borderWidth:2,borderColor:'#fff'}]},options:{cutout:'66%',plugins:{legend:{position:'bottom'}}}});
+ },40);
+ return `<span class="dashtag">VISUALIZAÇÃO · Waterfall de margem + mix + glosas</span>
+  <p class="lead">Da receita ao resultado em <b>cascata (waterfall)</b>, com a margem e o mix por linha de serviço. Mostra como equipe assistencial, insumos/OPME e logística formam o custo do cuidado — e o impacto das <b>glosas</b> com operadoras no faturamento.</p>
+  <div class="grid g4" style="margin-bottom:18px">
+   ${kpi('Margem de contribuição','22,4%','▲ 0,7 p.p.','up')}
+   ${kpi('Custo de insumos/OPME','14% da receita','▼ negociação','down')}
+   ${kpi('Linha + rentável','Atenção domic.','margem 28%','flat')}
+   ${kpi('Glosa média','4,1%','▼ de 5,3%','up')}
+  </div>
+  <div class="grid g2">
+   <div class="card"><h3>Da receita ao resultado</h3><div class="sub">composição do custo do cuidado (índice)</div><div class="chartbox"><canvas id="d4w"></canvas></div></div>
+   <div class="card"><h3>Mix de receita por linha</h3><div class="sub">participação % do portfólio</div><div class="chartbox donutwrap"><canvas id="d4mix"></canvas><div class="donutctr" style="bottom:42px"><b style="background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">R$ 6,4 mi</b><span>receita/mês</span></div></div></div>
+  </div>
+  <div class="card" style="margin-top:18px"><h3>Rentabilidade & glosa por linha de serviço</h3><div class="sub">receita, margem e faturamento com operadoras</div>
+    <table><thead><tr><th>Linha</th><th>Receita (mês)</th><th>Margem</th><th>Glosa</th><th>Status</th></tr></thead><tbody>
+      <tr><td>Internação domiciliar</td><td>R$ 2,43 mi</td><td>21%</td><td>4,6%</td><td><span class="badge b-ok">Volume</span></td></tr>
+      <tr><td>Atenção domiciliar</td><td>R$ 1,92 mi</td><td>28%</td><td>3,2%</td><td><span class="badge b-ok">Destaque</span></td></tr>
+      <tr><td>Telemedicina</td><td>R$ 0,77 mi</td><td>34%</td><td>2,1%</td><td><span class="badge b-ok">Alta margem</span></td></tr>
+      <tr><td>Aluguel de equipamentos</td><td>R$ 0,77 mi</td><td>26%</td><td>5,4%</td><td><span class="badge b-info">Recorrente</span></td></tr>
+      <tr><td>Reabilitação / Fisio</td><td>R$ 0,51 mi</td><td>19%</td><td>6,0%</td><td><span class="badge b-warn">Glosa alta</span></td></tr>
+    </tbody></table>
+  </div>`;
+}
+
+/* ================= DASH 5 — EXECUTIVO & QUALIDADE ================= */
+function dash5(){
+ const ring=(v,color,nm,suf,dl,dcls)=>`<div class="ring"><div class="circ" style="background:conic-gradient(${color} ${v*3.6}deg,#e1e9f2 0)"><b>${v}${suf}</b></div><div class="nm">${nm}</div><div class="dl ${dcls}">${dl}</div></div>`;
+ const sb=(arr)=>`<div class="spark">${arr.map(v=>`<i style="height:${v}%"></i>`).join('')}</div>`;
+ setTimeout(()=>{
+  C('d5rev',{type:'line',data:{labels:MES.slice(0,6),datasets:[{label:'Faturamento (R$ mi)',data:[5.6,5.8,6.0,6.1,6.3,6.4],borderColor:'#2266ad',backgroundColor:(c)=>{const x=c.chart.ctx,g=x.createLinearGradient(0,0,0,210);g.addColorStop(0,'rgba(102,178,230,.32)');g.addColorStop(1,'rgba(34,102,173,0)');return g;},fill:true,tension:.4,borderWidth:3,pointRadius:0,pointHoverRadius:5}]},options:{plugins:{legend:{display:false}},scales:{x:{grid:{display:false}}}}});
+  C('d5b',{type:'line',data:{labels:['Jan','Fev','Mar','Abr','Mai','Jun'],datasets:[
+    {label:'Satisfação (NPS-like) %',data:[89,90,91,92,93,94],borderColor:'#1a9e6a',tension:.35,borderWidth:3,pointRadius:0},
+    {label:'Reinternação %',data:[11.4,10.6,9.8,9.1,8.6,8.2],borderColor:'#ef4d57',tension:.35,borderWidth:3,pointRadius:0,yAxisID:'y2'}]},
+    options:{plugins:{legend:{position:'bottom'}},scales:{y:{min:80,max:100},y2:{position:'right',min:6,max:14,grid:{drawOnChartArea:false}},x:{grid:{display:false}}}}});
+ },40);
+ return `<span class="dashtag">VISUALIZAÇÃO · Scorecard executivo & qualidade</span>
+  <p class="lead">Visão de diretoria: os indicadores que sustentam o home care — SLA de implantação, reinternação, satisfação e adesão ao plano — em anéis, com o faturamento consolidado e a evolução de satisfação × reinternação. Pronto para o comitê, para as operadoras e para as auditorias de acreditação.</p>
+  <div class="card"><h3>Indicadores estratégicos</h3><div class="sub">desempenho vs. meta</div>
+    <div class="rings">
+      ${ring(92,'#2266ad','SLA implantação','%','meta 90% ✓','up')}
+      ${ring(8,'#1a9e6a','Reinternação','%','meta &le;10% ✓','up')}
+      ${ring(94,'#4a9fdc','Satisfação','%','▲ subindo','up')}
+      ${ring(96,'#0b2f57','Adesão ao plano','%','terapêutico','up')}
+    </div>
+  </div>
+  <div class="grid g4" style="margin:18px 0">
+   ${kpi('Faturamento (mês)','R$ 6,4 mi','▲ 12% YoY','up')}
+   ${kpi('Pacientes ativos','1.240','base recorrente','up')}
+   ${kpi('Visitas/mês','8.900','multidisciplinar','up')}
+   ${kpi('Dias sem evento grave','176','recorde da operação','up')}
+  </div>
+  <div class="grid g2">
+    <div class="card"><h3>Faturamento consolidado</h3><div class="sub">evolução semestral (R$ mi)</div><div class="chartbox sm"><canvas id="d5rev"></canvas></div></div>
+    <div class="card"><h3>Satisfação × Reinternação</h3><div class="sub">satisfação sobe, reinternação cai</div><div class="chartbox sm"><canvas id="d5b"></canvas></div></div>
+  </div>
+  <div class="card" style="margin-top:18px"><h3>Scorecard por área</h3><div class="sub">desempenho e mini-tendência (6 meses)</div>
+   <table class="scoretab"><thead><tr><th>Área</th><th>Indicador</th><th>Atual</th><th>Meta</th><th>Tendência</th><th>Status</th></tr></thead><tbody>
+     <tr><td>Central 24h</td><td>SLA de implantação (2h)</td><td>92%</td><td>90%</td><td>${sb([78,82,85,88,90,92])}</td><td><span class="trend-up">▲ acima</span></td></tr>
+     <tr><td>Assistencial</td><td>Reinternação</td><td>8,2%</td><td>10%</td><td>${sb([100,92,84,76,68,60])}</td><td><span class="trend-up">▲ no alvo</span></td></tr>
+     <tr><td>Experiência</td><td>Satisfação</td><td>94%</td><td>92%</td><td>${sb([76,80,84,88,91,94])}</td><td><span class="trend-up">▲ acima</span></td></tr>
+     <tr><td>Faturamento</td><td>Glosa média</td><td>4,1%</td><td>5%</td><td>${sb([100,90,82,74,66,58])}</td><td><span class="trend-up">▲ melhor</span></td></tr>
+     <tr><td>Operação</td><td>Ocupação de equipes</td><td>86%</td><td>90%</td><td>${sb([72,76,80,82,84,86])}</td><td><span class="trend-up">▲ perto</span></td></tr>
+   </tbody></table>
+  </div>`;
+}
+
+/* ================= POWER PLATFORM ================= */
+function archDiagram(){
+ return `<div class="card"><h3>Arquitetura integrada — Microsoft Power Platform</h3><div class="sub">tudo no Dataverse e no Microsoft 365 que a True Care já usa</div>
+  <div class="flow">
+    <div class="step"><div class="si">📱</div><div class="sn">Power Apps</div><div class="sd">Prontuário & visita</div></div>
+    <div class="arrow">➜</div>
+    <div class="step" style="border-color:var(--blue-400);box-shadow:0 0 0 2px var(--ring)"><div class="si">🗄️</div><div class="sn">Dataverse</div><div class="sd">Base única governada</div></div>
+    <div class="arrow">➜</div>
+    <div class="step"><div class="si">⚡</div><div class="sn">Power Automate</div><div class="sd">Faturamento · alertas · SLA</div></div>
+    <div class="arrow">➜</div>
+    <div class="step"><div class="si">📊</div><div class="sn">Power BI</div><div class="sd">5 painéis</div></div>
+  </div>
+  <div class="flow" style="margin-top:14px">
+    <div class="step"><div class="si">🌐</div><div class="sn">Power Pages</div><div class="sd">Portal do paciente</div></div>
+    <div class="arrow">➜</div>
+    <div class="step"><div class="si">💬</div><div class="sn">Copilot Studio</div><div class="sd">Copiloto assistencial</div></div>
+    <div class="arrow">➜</div>
+    <div class="step"><div class="si">🟦</div><div class="sn">Microsoft 365</div><div class="sd">Teams · SharePoint · Outlook</div></div>
+    <div class="arrow">➜</div>
+    <div class="step"><div class="si">🔐</div><div class="sn">Entra ID</div><div class="sd">Segurança & LGPD</div></div>
+  </div>
+  <div class="archlegend"><span><span class="dot" style="background:var(--blue-400)"></span>Base de dados</span><span><span class="dot" style="background:var(--blue-500)"></span>Aplicação & automação</span><span><span class="dot" style="background:var(--blue-300)"></span>Experiência</span><span>Fontes: prontuário · operadoras (TISS) · telemedicina · central 24h · hospitais</span></div>
+ </div>`;
+}
+function pp1(){
+ return `<p class="lead">App canvas no <b>Power Apps</b> sobre o Dataverse para o <b>prontuário e o registro da visita domiciliar</b> — sinais vitais, evolução, procedimentos, insumos e foto de lesão — inclusive offline no domicílio. Substitui a papelada, padroniza a assistência e alimenta os painéis e o faturamento em tempo real.</p>
+  <div class="grid g2">
+   <div class="card"><h3>Tela do app (Power Apps)</h3><div class="sub">visita domiciliar · tablet/mobile offline</div>
+     <div style="background:#f4f9fe;border:1px solid var(--line);border-radius:14px;padding:14px">
+       <div class="row" style="margin-bottom:10px"><b style="font-size:13px">🩺 Visita · VS-3320</b><span class="badge b-info">Em atendimento</span></div>
+       <div class="mini"><div class="row"><div class="mt">Paciente</div><span class="ms">Sr. Antônio, 78 · atenção domiciliar</span></div></div>
+       <div class="mini"><div class="row"><div class="mt">Checklist de procedimentos</div><span class="ms">2/3</span></div><div class="progress" style="margin-top:7px"><i style="width:66%"></i></div></div>
+       <div class="mini"><div class="mt">Sinais vitais / foto da lesão</div><div class="row" style="margin-top:6px;justify-content:flex-start;gap:8px"><div style="width:48px;height:40px;background:linear-gradient(135deg,#0b2f57,#1a5290);border-radius:7px"></div><div style="width:48px;height:40px;background:#d6ecfb;border-radius:7px;display:flex;align-items:center;justify-content:center;color:var(--navy-600);font-weight:700">＋</div></div></div>
+       <div class="btn acc full" style="margin-top:8px">Confirmar → Dataverse</div>
+     </div>
+   </div>
+   <div class="card stack"><h3>Por que Power Apps</h3>
+     <div class="feat"><div class="fi">💳</div><div><b>Custo baixo</b><br><span class="note">Aproveita o licenciamento Microsoft 365 já existente.</span></div></div>
+     <div class="feat"><div class="fi">📴</div><div><b>Offline nativo</b><br><span class="note">Funciona no domicílio sem depender de rede e sincroniza.</span></div></div>
+     <div class="feat"><div class="fi">📷</div><div><b>Registro na origem</b><div class="note">Sinais vitais, evolução e foto de lesão com data e local.</div></div></div>
+     <div class="feat"><div class="fi">🧩</div><div><b>Conectores prontos</b><br><span class="note">Prontuário, operadoras (TISS), telemedicina, SharePoint e +900.</span></div></div>
+   </div>
+  </div>
+  <div style="margin-top:18px">${archDiagram()}</div>`;
+}
+function pp2(){
+ return `<p class="lead">Fluxo no <b>Power Automate</b> que monta o <b>faturamento e as contas com as operadoras (TISS)</b> — coletando as visitas e os insumos do prontuário, validando pré-glosa, com aprovação e envio. Acaba com a digitação manual de guias e reduz a glosa por inconsistência.</p>
+  <div class="card"><h3>Fluxo: faturamento & contas (TISS)</h3><div class="sub">por paciente / operadora</div>
+   <div class="flow">
+     <div class="step"><div class="si">🔄</div><div class="sn">Coleta</div><div class="sd">Visitas · insumos · OPME</div></div>
+     <div class="arrow">➜</div>
+     <div class="step"><div class="si">🧮</div><div class="sn">Monta conta</div><div class="sd">Guia TISS</div></div>
+     <div class="arrow">➜</div>
+     <div class="step"><div class="si">🔍</div><div class="sn">Valida (pré-glosa)</div><div class="sd">Regras da operadora</div></div>
+     <div class="arrow">➜</div>
+     <div class="step"><div class="si">🖊️</div><div class="sn">Aprovação</div><div class="sd">Faturamento (Teams)</div></div>
+     <div class="arrow">➜</div>
+     <div class="step"><div class="si">📧</div><div class="sn">Envia</div><div class="sd">Operadora + portal</div></div>
+   </div>
+  </div>
+  <div class="grid g2" style="margin-top:18px">
+    <div class="card"><h3>Aprovação no Teams</h3><div class="sub">card adaptativo</div>
+      <div style="background:#f4f9fe;border:1px solid var(--line);border-radius:14px;padding:14px">
+        <b style="font-size:13px">📄 Conta · Sr. Antônio · Operadora X · Jun</b>
+        <div class="note" style="margin:8px 0">26 visitas · insumos R$ 1,4 mil · pré-glosa 0 · total R$ 9,8 mil</div>
+        <div class="row"><span class="btn acc" style="flex:1;margin-right:6px">Aprovar e enviar</span><span class="btn" style="flex:1;background:linear-gradient(135deg,#ef4d57,#cf2436)">Revisar</span></div>
+      </div>
+    </div>
+    <div class="card stack"><h3>Ganhos</h3>
+      <div class="feat"><div class="fi">⏱️</div><div><b>Horas, não dias</b> para faturar por operadora.</div></div>
+      <div class="feat"><div class="fi">📉</div><div><b>Menos glosa</b> com validação antes do envio.</div></div>
+      <div class="feat"><div class="fi">🔎</div><div><b>Rastreabilidade</b> para auditoria e acreditação.</div></div>
+    </div>
+  </div>`;
+}
+function pp3(){
+ return `<p class="lead">Robôs no <b>Power Automate</b> que <b>alertam sobre sinal vital fora de faixa, visita não realizada, risco de reinternação e intercorrência</b> — em tempo real, direto no Teams da central 24h, abrindo tarefa e acionando o plantão. Protege o paciente e reduz a reinternação.</p>
+  <div class="card"><h3>Fluxo: alertas clínicos & intercorrências</h3><div class="sub">monitoramento contínuo · central 24h</div>
+   <div class="flow">
+     <div class="step"><div class="si">📡</div><div class="sn">Evento</div><div class="sd">Sinal vital · visita · IA feridas</div></div>
+     <div class="arrow">➜</div>
+     <div class="step"><div class="si">🔍</div><div class="sn">Avalia</div><div class="sd">Faixa de risco</div></div>
+     <div class="arrow">➜</div>
+     <div class="step"><div class="si">🧾</div><div class="sn">Tarefa</div><div class="sd">Aciona plantão</div></div>
+     <div class="arrow">➜</div>
+     <div class="step"><div class="si">🔔</div><div class="sn">Notifica</div><div class="sd">Central + médico</div></div>
+   </div>
+  </div>
+  <div class="grid g2" style="margin-top:18px">
+    <div class="card"><h3>Alerta gerado</h3><div class="sub">exemplo · em tempo real</div>
+      <div class="callout" style="margin:0">🔔 <b>Intercorrências ativas</b><br>• D. Marli (Z. Leste): SpO2 <b>88%</b> — plantão acionado<br>• Sr. Jorge: visita de hoje não realizada<br>• Sr. Antônio: lesão sacral com piora (IA)<br><span class="note">Tarefas atribuídas a: Plantão, Médico responsável e Coordenação</span></div>
+    </div>
+    <div class="card stack"><h3>Impacto</h3>
+      <div class="feat"><div class="fi">🚑</div><div><b>Menos reinternação</b> com ação clínica imediata.</div></div>
+      <div class="feat"><div class="fi">⏱️</div><div><b>Resposta rápida</b> da central 24h.</div></div>
+      <div class="feat"><div class="fi">🛡️</div><div><b>Segurança do paciente</b> documentada.</div></div>
+    </div>
+  </div>`;
+}
+function pp4(){
+ return `<p class="lead">Fluxo no <b>Power Automate</b> para a <b>implantação rápida (SLA de 2h)</b>: da alta hospitalar à primeira visita — capta o pedido, checa elegibilidade e autorização da operadora, aloca a equipe mais próxima e confirma ao hospital e à família. É o diferencial da True Care, orquestrado ponta a ponta.</p>
+  <div class="card"><h3>Fluxo: implantação em até 2 horas</h3><div class="sub">da alta hospitalar à 1ª visita</div>
+   <div class="flow">
+     <div class="step"><div class="si">🏥</div><div class="sn">Captação</div><div class="sd">Alta / hospital parceiro</div></div>
+     <div class="arrow">➜</div>
+     <div class="step"><div class="si">✅</div><div class="sn">Elegibilidade</div><div class="sd">Autorização operadora</div></div>
+     <div class="arrow">➜</div>
+     <div class="step"><div class="si">🧭</div><div class="sn">Aloca equipe</div><div class="sd">Mais próxima + skill</div></div>
+     <div class="arrow">➜</div>
+     <div class="step"><div class="si">🔔</div><div class="sn">Confirma</div><div class="sd">Hospital + família</div></div>
+   </div>
+  </div>
+  <div class="grid g2" style="margin-top:18px">
+    <div class="card"><h3>Confirmação gerada</h3><div class="sub">exemplo</div>
+      <div class="callout" style="margin:0">📅 <b>Implantação confirmada · D. Cleusa</b><br>Alta Hosp. Samaritano <b>11:20</b> → 1ª visita <b>13:05</b> (1h45)<br>✅ Equipe: Enf. Paula + técnico · dentro do SLA de 2h<br><span class="note">Família e hospital notificados automaticamente.</span></div>
+    </div>
+    <div class="card stack"><h3>Impacto</h3>
+      <div class="feat"><div class="fi">⚡</div><div><b>Leito liberado</b> mais rápido para o hospital/operadora.</div></div>
+      <div class="feat"><div class="fi">🎯</div><div><b>SLA de 2h</b> cumprido e medido — diferencial competitivo.</div></div>
+      <div class="feat"><div class="fi">🤝</div><div><b>Família tranquila</b>, informada desde a alta.</div></div>
+    </div>
+  </div>`;
+}
+function pp5(){
+ return `<p class="lead">Agente no <b>Copilot Studio</b> (no Teams) que responde sobre pacientes, agenda de visitas, SLA de implantação, reinternação e glosas — consultando os dados da operação em linguagem natural, com governança clínica (LGPD) e por permissão do usuário. A coordenação pergunta e age sem abrir vários sistemas.</p>
+  <div class="grid g2">
+   <div class="card"><h3>Copiloto Assistencial</h3><div class="sub">plugado no Dataverse + Power BI + prontuário</div>
+     <div style="background:#f4f9fe;border:1px solid var(--line);border-radius:14px;padding:14px;font-size:13px">
+       <div style="text-align:right;margin-bottom:10px"><span style="display:inline-block;background:linear-gradient(135deg,var(--navy-700),var(--navy-600));color:#fff;padding:9px 13px;border-radius:14px 14px 3px 14px;max-width:82%">Quais pacientes estão com risco de reinternação?</span></div>
+       <div style="margin-bottom:12px"><span style="display:inline-block;background:#fff;border:1px solid var(--line);padding:9px 13px;border-radius:14px 14px 14px 3px;max-width:86%">Há <b>3 pacientes</b> em risco — a D. Marli (Z. Leste) é a mais crítica, com SpO2 baixa e intercorrência ativa. Quer que eu acione o plantão e o médico responsável?</span></div>
+       <div style="text-align:right;margin-bottom:10px"><span style="display:inline-block;background:linear-gradient(135deg,var(--navy-700),var(--navy-600));color:#fff;padding:9px 13px;border-radius:14px 14px 3px 14px">Como está o SLA de implantação hoje?</span></div>
+       <div><span style="display:inline-block;background:#fff;border:1px solid var(--line);padding:9px 13px;border-radius:14px 14px 14px 3px;max-width:86%">Está em <b>92%</b> dentro das 2h. Só a implantação da D. Marli passou (2h20), por espera de autorização da operadora. <span class="note">[fonte: painel Desospitalização]</span></span></div>
+     </div>
+   </div>
+   <div class="card stack"><h3>Capacidades</h3>
+     <div class="feat"><div class="fi">📊</div><div><b>Pergunta em linguagem natural</b> sobre pacientes, SLA e glosas.</div></div>
+     <div class="feat"><div class="fi">⚙️</div><div><b>Ações</b>: aciona plantão e dispara fluxos do Power Automate.</div></div>
+     <div class="feat"><div class="fi">🔐</div><div><b>Governança clínica</b>: responde conforme a permissão e a LGPD.</div></div>
+     <div class="feat"><div class="fi">🟦</div><div><b>Onde a equipe já está</b>: dentro do Teams.</div></div>
+   </div>
+  </div>
+  <div style="margin-top:18px">${archDiagram()}</div>`;
+}
+
+/* ================= HOME ================= */
+function home(){
+ return `<div class="hero">
+   <div style="display:inline-flex;align-items:center;gap:14px;margin-bottom:16px">
+     <span style="display:inline-flex;align-items:center"><svg width="176" height="56" viewBox="0 0 220 70" xmlns="http://www.w3.org/2000/svg"><path d="M20 30 Q110 12 200 30" fill="none" stroke="#66b2e6" stroke-width="5" stroke-linecap="round"/><text x="16" y="56" font-family="Manrope,Arial" font-weight="800" font-size="32" fill="#ffffff" letter-spacing="-1">True Care</text></svg></span>
+     <span style="font-size:12px;font-weight:600;color:#bcd8f0;letter-spacing:.05em">HOME CARE · DESOSPITALIZAÇÃO · SLA 2H · TELEMEDICINA · BI &amp; AUTOMAÇÃO</span>
+   </div>
+   <h1>Portfólio de Provas de Conceito — True Care</h1>
+   <p>Sejam muito bem-vindos. Preparamos um conjunto de <b style="color:#fff">15 provas de conceito</b> sob medida para a True Care, no coração do seu nicho: a <b style="color:#fff">assistência domiciliar</b>. São aplicativos, dashboards em Power BI e automações em Power Platform, numa única plataforma sobre o Microsoft 365. Vamos navegar por cada frente para mostrar, na prática, como orquestrar a desospitalização com o SLA de 2h, dar visão da capacidade e do roteiro de visitas, controlar custo do cuidado e glosas, e proteger o paciente com alertas clínicos — saindo da planilha e com governança. Os números são ilustrativos, apenas para dar vida às demonstrações.</p>
+   <div class="chips"><span>📱 5 Aplicativos</span><span>📊 5 Dashboards</span><span>⚡ 5 Power Platform</span><span>🗄️ Base única: Dataverse</span></div>
+   <div class="certrow"><span class="cert">🏠 São Paulo · atenção domiciliar</span><span class="cert">⏱️ Implantação em até 2h</span><span class="cert">📋 Central 24h · Telemedicina</span></div>
+ </div>
+  <div class="card" style="margin-bottom:24px"><h3>Diferenciais & serviços da True Care</h3><div class="sub">a mesma excelência que vamos traduzir em dados e automação</div>
+    <div class="clientwall">
+      <div class="cwall"><span class="ce">🏥</span>Internação Domiciliar</div>
+      <div class="cwall"><span class="ce">🏠</span>Atenção Domiciliar</div>
+      <div class="cwall"><span class="ce">🎥</span>Telemedicina</div>
+      <div class="cwall"><span class="ce">☎️</span>Central 24h</div>
+      <div class="cwall"><span class="ce">🎓</span>True Educa</div>
+    </div>
+  </div>
+  <div class="grid g3">
+   <div class="card"><h3>📱 5 Aplicativos</h3><div class="sub">experiências mobile/portal</div><div class="note">Cockpit da diretoria (com mapa de pacientes), portal do paciente & família, equipe em campo, True Educa e análise de feridas com IA.</div></div>
+   <div class="card"><h3>📊 5 Dashboards (Power BI)</h3><div class="sub">cada um com uma visualização diferente</div><div class="note">Capacidade assistencial, fluxo de desospitalização (SLA), roteiro de visitas, custo do cuidado & glosas e o executivo com qualidade.</div></div>
+   <div class="card"><h3>⚡ 5 Power Platform</h3><div class="sub">automação com governança</div><div class="note">Prontuário de visita, faturamento & TISS, alertas clínicos, implantação rápida (SLA 2h) e o copiloto assistencial.</div></div>
+  </div>
+  <div class="grid g4" style="margin-top:22px">
+   ${kpi('Diferenciais','5','+ True Educa','flat')}
+   ${kpi('POCs','15','navegáveis','flat')}
+   ${kpi('Base','Microsoft 365','padrão do mercado','flat')}
+   ${kpi('Dados','Dataverse','fonte única governada','flat')}
+  </div>
+  <div style="margin-top:24px">${archDiagram()}</div>`;
+}
+
+/* ================= router ================= */
+const VIEWS={app1,app2,app3,app4,app5,dash1,dash2,dash3,dash4,dash5,pp1,pp2,pp3,pp4,pp5};
+function go(id){
+  destroyCharts();
+  const m=meta(id);
+  document.getElementById('crumb').textContent=m?m.crumb:'Início';
+  document.getElementById('title').textContent=m?(m.ico+' '+m.name):'Portfólio de POCs — True Care';
+  document.getElementById('pocflag').textContent=m?'Prova de conceito':'15 provas de conceito';
+  const v=document.getElementById('view');
+  v.style.animation='none';void v.offsetWidth;v.style.animation='';
+  v.innerHTML=(VIEWS[id]||home)();
+  setActive(id);window.scrollTo(0,0);
+}
+buildNav();
+document.getElementById('view').innerHTML=home();
+</script>
+</body>
+</html>
